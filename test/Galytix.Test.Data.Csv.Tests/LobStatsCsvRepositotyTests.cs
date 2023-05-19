@@ -46,13 +46,13 @@ cz,gwp,""What, we want"",traffic,6.2E-5,0.03,1,2,2.5,130";
         //Assert
         Assert.Multiple(() =>
         {
-            Assert.That(data.Length, Is.EqualTo(2));
+            Assert.That(data, Has.Length.EqualTo(2));
 
             Assert.That(data[0].Country, Is.EqualTo("ba"));
             Assert.That(data[0].VariableId, Is.EqualTo("xx"));
             Assert.That(data[0].VariableName, Is.EqualTo("Unknown"));
             Assert.That(data[0].LineOfBusiness, Is.EqualTo("smugglers"));
-            Assert.That(data[0].Values.Count, Is.EqualTo(4));
+            Assert.That(data[0].Values, Has.Count.EqualTo(4));
             Assert.That(data[0].Values.ContainsKey(1998));
             Assert.That(data[0].Values[1998], Is.EqualTo(2000m));
             Assert.That(data[0].Values.ContainsKey(2000));
@@ -66,7 +66,7 @@ cz,gwp,""What, we want"",traffic,6.2E-5,0.03,1,2,2.5,130";
             Assert.That(data[1].VariableId, Is.EqualTo("gwp"));
             Assert.That(data[1].VariableName, Is.EqualTo("What, we want"));
             Assert.That(data[1].LineOfBusiness, Is.EqualTo("traffic"));
-            Assert.That(data[1].Values.Count, Is.EqualTo(6));
+            Assert.That(data[1].Values, Has.Count.EqualTo(6));
             Assert.That(data[1].Values.ContainsKey(1994));
             Assert.That(data[1].Values[1994], Is.EqualTo(6.2E-5m));
             Assert.That(data[1].Values.ContainsKey(1998));

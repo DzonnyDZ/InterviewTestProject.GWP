@@ -7,7 +7,7 @@ public class Program
     /// <param name="args">Command line arguments</param>
     public static void Main(string[] args)
     {
-        IConfiguration config = new ConfigurationBuilder()
+        new ConfigurationBuilder()
             .AddJsonFile("appsettings.json")
             .AddEnvironmentVariables()
             .Build();

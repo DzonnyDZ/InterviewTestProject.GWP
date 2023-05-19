@@ -15,10 +15,7 @@ public class Startup
 
     /// <summary>Initializes a new instance of the <see cref="Startup"/> class.</summary>
     /// <param name="configuration">Provides access to application configuration</param>
-    public Startup(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
+    public Startup(IConfiguration configuration) => Configuration = configuration;
 
     /// <summary>Gets an object which provides access to application configuration</summary>
     public IConfiguration Configuration { get; }
@@ -46,8 +43,7 @@ public class Startup
 
     /// <summary>Sets up application configuration</summary>
     /// <param name="app">Application builder</param>
-    /// <param name="env">Provides access to hosting environment</param>
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app)
     {
         if (app is null) throw new ArgumentNullException(nameof(app));
 
@@ -58,9 +54,6 @@ public class Startup
 
         app.UseRouting();
         //app.UseAuthorization();
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
+        app.UseEndpoints(endpoints => endpoints.MapControllers());
     }
 }

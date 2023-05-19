@@ -1,4 +1,6 @@
+using System.Net;
 using Galytix.Test.Business.Configuration;
+using Galytix.Test.Common.Exceptions;
 using Galytix.Test.Data.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -8,7 +10,7 @@ namespace Galytix.Test.Business.Tests;
 /// <summary>Tests for <see cref="LobBusiness"/></summary>
 public class LobBusinessTests
 {
-    private static readonly Random rnd = new Random();
+    private static readonly Random rnd = new();
 
     private LobStatsBusinessOptions options;
     private Mock<ILobStatsRepository> repoMock;
@@ -30,7 +32,6 @@ public class LobBusinessTests
     /// <param name="lobs">One or more lines of business to count the averages for</param>
     /// <returns>Task to await to wait for async test to finish</returns>
     [Test]
-    [TestCase("ba")]
     [TestCase("bw", "freight")]
     [TestCase("my", "freight", "transport")]
     [TestCase("mt", "fishing", "shipping", "air")]
@@ -46,6 +47,20 @@ public class LobBusinessTests
         //Assert
         Assert.That(res, Is.EqualTo(result));
         repoMock.Verify(r => r.CountAveragesAsync(country, "gwp", lobs, options.YearFrom, options.YearTo), Times.Once());
+    }
+
+    [Test]
+    [TestCase("my")]
+    public void CountGwpAveragesAsync_NoLobRequested_Throws(string country)
+    {
+        //Act & Assert
+        var ex = Assert.ThrowsAsync<ArgumentException>(async () => await inst.CountGwpAveragesAsync(country, Array.Empty<string>()));
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex.ParamName, Is.EqualTo("lobs"));
+            Assert.That(ex.Data.Contains(ExceptionData.HttpStatus));
+            Assert.That(ex.Data[ExceptionData.HttpStatus], Is.EqualTo(HttpStatusCode.BadRequest));
+        });
     }
 
     /// <summary>Tests that <see cref="LobBusiness.CountGwpAveragesAsync"/> works as expected when one of the LOBs does not have data in repository</summary>

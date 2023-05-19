@@ -13,10 +13,7 @@ public class ErrorHandlingMiddleware
 
     /// <summary>Initializes a new instance of the <see cref="ErrorHandlingMiddleware"/> class.</summary>
     /// <param name="next">Next handler in row.</param>
-    public ErrorHandlingMiddleware(RequestDelegate next)
-    {
-        this.next = next ?? throw new ArgumentNullException(nameof(next));
-    }
+    public ErrorHandlingMiddleware(RequestDelegate next) => this.next = next ?? throw new ArgumentNullException(nameof(next));
 
     /// <summary>Invokes next handler.</summary>
     /// <param name="context">Current HTTP context.</param>
@@ -70,15 +67,12 @@ public class ErrorHandlingMiddleware
             }
         }
 
-        switch (exception)
+        return exception switch
         {
-            case ValidationException _:
-                return HttpStatusCode.BadRequest;
-            case System.Data.RowNotInTableException _:
-                return HttpStatusCode.NotFound;
-            default:
-                return HttpStatusCode.InternalServerError;
-        }
+            ValidationException _ => HttpStatusCode.BadRequest,
+            System.Data.RowNotInTableException _ => HttpStatusCode.NotFound,
+            _ => HttpStatusCode.InternalServerError,
+        };
     }
 
     /// <summary>Writes exception details to response.</summary>

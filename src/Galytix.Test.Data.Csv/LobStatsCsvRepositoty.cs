@@ -59,13 +59,10 @@ internal partial class LobStatsCsvRepositoty : ILobStatsRepository
 
     /// <summary>Makes sure <see cref="allData"/> is initialized</summary>
     /// <returns>Task to await to wait for the asynchronous operation to complete</returns>
-    private async Task EnsureDataAsync()
-    {
-        if (allData == null)
-            //Not using lock here because lock cannot be used in async method. The risk is that data are read unnecessarily multiple times form file
-            //but always same data should be read
-            allData = await LoadAllDataAsync().ToArrayAsync();
-    }
+    private async Task EnsureDataAsync() =>
+        //Not using lock here because lock cannot be used in async method. The risk is that data are read unnecessarily multiple times form file
+        //but always same data should be read
+        allData ??= await LoadAllDataAsync().ToArrayAsync();
 
     /// <summary>Pre-loads data from CSV</summary>
     /// <returns>Data loaded</returns>

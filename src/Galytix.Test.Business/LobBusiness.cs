@@ -38,15 +38,15 @@ internal partial class LobBusiness : ILobBusiness
         if (lobs is null) throw new ArgumentNullException(nameof(lobs));
         if (country.Length != 2)
         {
-            throw new ArgumentException("Country name must be 2-letters ISO code, length must be 2 characters", nameof(country)) 
+            throw new ArgumentException("Country name must be 2-letters ISO code, length must be 2 characters", nameof(country))
             { Data = { [ExceptionData.HttpStatus] = HttpStatusCode.BadRequest } };
         }
 
         if (!Iso2Regex.IsMatch(country))
         {
-            throw new ArgumentException ("Country name must be 2-letters ISO code, letters must be lowercase a-z", nameof(country))
+            throw new ArgumentException("Country name must be 2-letters ISO code, letters must be lowercase a-z", nameof(country))
             { Data = { [ExceptionData.HttpStatus] = HttpStatusCode.BadRequest } };
-        };
+        }
 
         if (lobs.Length == 0)
         {
