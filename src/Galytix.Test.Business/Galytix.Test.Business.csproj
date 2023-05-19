@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Galytix.Test.Business.Abstractions\Galytix.Test.Business.Abstractions.csproj" />
+    <ProjectReference Include="..\Galytix.Test.Common\Galytix.Test.Common.csproj" />
     <ProjectReference Include="..\Galytix.Test.Data.Abstractions\Galytix.Test.Data.Abstractions.csproj" />
   </ItemGroup>
 

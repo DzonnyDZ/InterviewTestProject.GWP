@@ -32,6 +32,7 @@ public class Startup
         services.AddDataLayer();
         services.AddBusinessLayer();
         services.AddEndpointsApiExplorer();
+        services.AddMemoryCache();
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc(SwaggerVersion, new OpenApiInfo { Title = "Galytix.Test", Version = SwaggerVersion });
