@@ -1,4 +1,5 @@
-﻿using Galytix.Test.Data.Abstractions;
+﻿using System.IO.Abstractions;
+using Galytix.Test.Data.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Galytix.Test.Data.Csv;
@@ -13,6 +14,7 @@ public static class ServiceCollectionExtensions
     {
         if (services is null) throw new ArgumentNullException(nameof(services));
 
+        services.AddSingleton<IFileSystem, FileSystem>();
         services.AddSingleton<ILobStatsRepository, LobStatsCsvRepositoty>();
 
         return services;

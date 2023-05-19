@@ -30,6 +30,8 @@ internal class LobBusiness : ILobBusiness
     public async Task<IReadOnlyDictionary<string, decimal>> CountGwpAveragesAsync(string country, string[] lobs)
     {
         var ret = await repo.CountAveragesAsync(country, "gwp", lobs, yearFrom, yearTo);
-        return ret;
+        return ret.Select(kvp => (key: kvp.Key, value: kvp.Value))
+                  .Concat(from l in lobs where !ret.ContainsKey(l) select (key: l, value: 0m))
+                  .ToDictionary(v => v.key, v => v.value);
     }
 }

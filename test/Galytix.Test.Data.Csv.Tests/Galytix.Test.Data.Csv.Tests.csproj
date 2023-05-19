@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Galytix.Test.Business\Galytix.Test.Business.csproj" />
+    <ProjectReference Include="..\..\src\Galytix.Test.Data.Csv\Galytix.Test.Data.Csv.csproj" />
   </ItemGroup>
 
 </Project>

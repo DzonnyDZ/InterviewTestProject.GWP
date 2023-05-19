@@ -1,4 +1,5 @@
-﻿using Galytix.Test.Business;
+﻿using Galytix.Test.Api.Middlewares;
+using Galytix.Test.Business;
 using Galytix.Test.Business.Configuration;
 using Galytix.Test.Data.Csv;
 using Galytix.Test.Data.Csv.Configuration;
@@ -48,6 +49,8 @@ public class Startup
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         if (app is null) throw new ArgumentNullException(nameof(app));
+
+        app.UseMiddleware<ErrorHandlingMiddleware>();
 
         app.UseSwagger();
         app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{typeof(Startup).Namespace} {SwaggerVersion}"));

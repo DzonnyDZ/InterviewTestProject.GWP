@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.IO.Abstractions;
+using System.Text.RegularExpressions;
 using CsvHelper;
 using CsvHelper.Configuration;
 using Galytix.Test.Common;
@@ -18,13 +19,16 @@ internal partial class LobStatsCsvRepositoty : ILobStatsRepository
     /// <remarks>The regular expression parses-out single named capture group 'y' containing the year number</remarks>
     private static readonly Regex YearHeaderRegex = GetYearHeaderRegex();
 
+    private readonly IFileSystem fileSystem;
     private LobStat[]? allData;
 
     /// <summary>Initializes a new instance of the <see cref="LobStatsCsvRepositoty"/> class.</summary>
+    /// <param name="fileSystem">Provides access to platform file system</param>
     /// <param name="options">Configuration options</param>
-    public LobStatsCsvRepositoty(IOptions<CsvRepositoryOptions> options)
+    public LobStatsCsvRepositoty(IFileSystem fileSystem, IOptions<CsvRepositoryOptions> options)
     {
         if (options is null) throw new ArgumentNullException(nameof(options));
+        this.fileSystem = fileSystem ?? throw new ArgumentNullException(nameof(fileSystem));
         FilePath = options.Value.FilePath;
     }
 
@@ -65,11 +69,11 @@ internal partial class LobStatsCsvRepositoty : ILobStatsRepository
 
     /// <summary>Pre-loads data from CSV</summary>
     /// <returns>Data loaded</returns>
-    private async IAsyncEnumerable<LobStat> LoadAllDataAsync()
+    internal async IAsyncEnumerable<LobStat> LoadAllDataAsync()
     {
-        using var fs = IO.File.OpenRead(FilePath);
+        using var fs = fileSystem.File.OpenRead(FilePath);
         using var tr = new IO.StreamReader(fs);
-        var config = new CsvConfiguration(InvariantCulture) { HasHeaderRecord = true, PrepareHeaderForMatch = a => a.Header.FirstUpperInvariant() };
+        var config = new CsvConfiguration(InvariantCulture) { HasHeaderRecord = true, PrepareHeaderForMatch = a => a.Header.FirstUpperInvariant(), TrimOptions = TrimOptions.Trim };
         using var r = new CsvReader(tr, config);
         var data = new List<LobStat>();
         while (await r.ReadAsync())
@@ -78,7 +82,7 @@ internal partial class LobStatsCsvRepositoty : ILobStatsRepository
             foreach (string h in r.HeaderRecord!)
             {
                 var m = YearHeaderRegex.Match(h);
-                if (m.Success && !string.IsNullOrEmpty(r[h]))
+                if (m.Success && !string.IsNullOrWhiteSpace(r[h]))
                     stat.Values.Add(int.Parse(m.Groups["y"].Value, InvariantCulture), (decimal)double.Parse(r[h]!, InvariantCulture));
             }
 
